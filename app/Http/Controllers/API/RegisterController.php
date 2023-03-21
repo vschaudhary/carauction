@@ -5,8 +5,10 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Dealership;
 use Illuminate\Support\Facades\Auth;
 use Validator;
+use Illuminate\Support\Facades\DB;
 
 class RegisterController extends Controller
 {
@@ -17,24 +19,67 @@ class RegisterController extends Controller
      */
     public function register(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required|email',
-            'password' => 'required',
-            'c_password' => 'required|same:password',
+        $data = [ 'data' => $request->all() ];
+        $validator = Validator::make($data, [
+            'data.profile.first_name' => 'required|string',
+            'data.profile.last_name' => 'required|string',
+            'data.profile.email' => 'required|string',
+            'data.profile.phone' => 'required|string',
+            'data.dealership.dealership_name' => 'required|string',
+            'data.dealership.dealership_street_name' => 'required|string',
+            'data.dealership.city' => 'required|string',
+            'data.dealership.state' => 'required|string',
+            'data.dealership.zip_code' => 'required|string',
+            'data.dealership.car_stock' => 'required|string'
         ]);
    
         if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());       
+            return $this->sendError('Validation Error.', $validator->errors(), 403);       
         }
-   
-        $input = $request->all();
-        $input['password'] = bcrypt($input['password']);
-        $user = User::create($input);
-        $success['token'] =  $user->createToken('MyApp')->accessToken;
-        $success['name'] =  $user->name;
-   
-        return $this->sendResponse($success, 'User register successfully.');
+        try{
+            DB::beginTransaction();
+            $success = [];
+            $userData = User::create([
+                'first_name'=>$request->profile['first_name'],
+                'last_name'=>$request->profile['last_name'],
+                'email'=>$request->profile['email'],
+                'phone'=>$request->profile['phone'],
+                'phone_ext'=>$request->profile['phone_ext'],
+                'mobile'=>$request->profile['mobile'],
+                'contact_preference'=>$request->profile['contact_preference'],
+                'role_id'=>1,
+                'status'=>1,
+                'type_id'=>0
+            ]);
+            if($userData){
+                $dealershipData = Dealership::create([
+                    'name'=>$request->dealership['dealership_name'],
+                    'street_name'=>$request->dealership['dealership_street_name'],
+                    'city'=>$request->dealership['city'],
+                    'state'=>$request->dealership['state'],
+                    'zip_code'=>$request->dealership['zip_code'],
+                    'website'=>$request->dealership['website'],
+                    'car_stock'=>$request->dealership['car_stock'],
+                    'status'=>1,
+                    'type_id'=>0,
+                    'user_id'=>$userData->id
+                ]);
+            }else{
+                DB::rollback();
+                return $this->sendError('Server Error', 'Something went wrong.', 500);
+            }
+            if($dealershipData){
+                // $success = User::where('id', $userData->id)->with('dealership')->firstOrFail();
+                DB::commit();
+                return $this->sendResponse($success, 'User register successfully.');
+            }else{
+                DB::rollback();
+                return $this->sendError('Server Error', 'Something went wrong.', 500);
+            }
+        }catch (Exception $e){
+            DB::rollback();
+            return $this->sendError('Server Error', $e->getMessage(), 500);
+        }
     }
 
     /**

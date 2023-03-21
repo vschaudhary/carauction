@@ -13,22 +13,19 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('dealerships', function (Blueprint $table) {
             $table->id();
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password')->nullable();
-            $table->string('phone');
-            $table->string('phone_ext')->nullable();
-            $table->string('mobile')->nullable();
-            $table->string('contact_preference')->nullable();
-            $table->integer('role_id')->default(0);
+            $table->string('name');
+            $table->string('street_name');
+            $table->string('city');
+            $table->string('state');
+            $table->string('zip_code');
+            $table->string('website')->nullable();
+            $table->string('car_stock')->nullable();
             $table->string('status')->nullable();
             $table->string('type_id')->nullable();
+            $table->bigInteger('user_id')->unsigned()->nullable();
             $table->bigInteger('created_by_id')->unsigned()->nullable();
-            $table->rememberToken();
             $table->timestamps();
         });
     }
@@ -40,6 +37,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('dealerships');
     }
 };
