@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Constant\Constants;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Dealership;
@@ -47,9 +48,9 @@ class RegisterController extends Controller
                 'phone_ext'=>$request->profile['phone_ext'],
                 'mobile'=>$request->profile['mobile'],
                 'contact_preference'=>$request->profile['contact_preference'],
-                'role_id'=>1,
-                'status'=>1,
-                'type_id'=>0
+                'role_id'=>Constants::TYPE_USER,
+                'status'=>Constants::STATE_DEACTIVATE,
+                'type_id'=>Constants::STATE_DEACTIVATE
             ]);
             if($userData){
                 $dealershipData = Dealership::create([
@@ -60,8 +61,8 @@ class RegisterController extends Controller
                     'zip_code'=>$request->dealership['zip_code'],
                     'website'=>$request->dealership['website'],
                     'car_stock'=>$request->dealership['car_stock'],
-                    'status'=>1,
-                    'type_id'=>0,
+                    'status'=>Constants::STATE_ACTIVE,
+                    'type_id'=>Constants::STATE_DEACTIVATE,
                     'user_id'=>$userData->id
                 ]);
             }else{
@@ -96,7 +97,7 @@ class RegisterController extends Controller
            return $this->sendResponse($success, 'User login successfully.');
        } 
        else{ 
-           return $this->sendError('Unauthorised.', ['error'=>'Unauthorised'], 401);
+           return $this->sendError('Unauthorised.', ['error'=>'Incorrect email or password entered.'], 401);
        } 
    }
 

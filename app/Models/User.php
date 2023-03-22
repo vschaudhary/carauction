@@ -26,6 +26,7 @@ class User extends Authenticatable
         'phone_ext',
         'mobile',
         'contact_preference',
+        'role_id',
         'status',
         'type_id',
         'created_by_id'
