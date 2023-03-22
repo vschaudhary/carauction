@@ -89,21 +89,20 @@ class RegisterController extends Controller
     */
    public function login(Request $request)
    {
-       if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
-           $user = Auth::user(); 
-           $success['token'] =  $user->createToken('MyApp')-> accessToken; 
-           $success['name'] =  $user->name;
+       if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
+           $success = Auth::user();
+           $success['token'] =  $success->createToken('MyApp')-> accessToken;
   
            return $this->sendResponse($success, 'User login successfully.');
        } 
        else{ 
-           return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+           return $this->sendError('Unauthorised.', ['error'=>'Unauthorised'], 401);
        } 
    }
 
    public function Unauthorised(Request $request)
    {
-     return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+     return $this->sendError('Unauthorised.', ['error'=>'Unauthorised'], 401);
    }
 
    public function abc(Request $request)
