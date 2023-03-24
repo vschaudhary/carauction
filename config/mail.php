@@ -14,6 +14,7 @@ return [
     */
 
     'default' => env('MAIL_MAILER', 'smtp'),
+    'driver' => env('MAIL_DRIVER', 'smtp'),
 
     /*
     |--------------------------------------------------------------------------
@@ -32,6 +33,10 @@ return [
     |            "postmark", "log", "array", "failover"
     |
     */
+
+    'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
+    // 'port' => env('MAIL_PORT', 465),
+    // 'encryption' => env('MAIL_ENCRYPTION', 'tls'),
 
     'mailers' => [
         'smtp' => [
@@ -114,5 +119,13 @@ return [
             resource_path('views/vendor/mail'),
         ],
     ],
+
+    // 'stream' => [
+    //     'ssl' => [
+    //         'allow_self_signed' => true,
+    //         'verify_peer' => false,
+    //         'verify_peer_name' => false,
+    //     ],
+    // ]
 
 ];

@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\API\RegisterController;
+use App\Http\Controllers\API\ForgotPasswordController;
+use App\Http\Controllers\API\ResetPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,6 +26,12 @@ use App\Http\Controllers\API\RegisterController;
 Route::post('login', [RegisterController::class, 'login']);
 Route::get('Unauthorised', [RegisterController::class, 'Unauthorised'])->name('login');
 Route::post('register', [RegisterController::class, 'register']);
+
+ // Password reset routes
+Route::post('forgot-password',  [ForgotPasswordController::class, 'forgotPassword']);
+Route::post('verify/pin', [ForgotPasswordController::class, 'verifyPin']);
+Route::post('reset-password', [ResetPasswordController::class, 'resetPassword']);
+
      
 Route::middleware('auth:api')->group( function () {
     Route::post('abc', [RegisterController::class, 'abc']);

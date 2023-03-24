@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Passport\HasApiTokens;
 
-class Dealership extends Model
+class password_reset extends Model
 {
     use HasFactory;
     /**
@@ -15,16 +15,8 @@ class Dealership extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'street_name',
-        'city',
-        'state',
-        'zip_code',
-        'website',
-        'car_stock',
-        'status',
-        'type_id',
-        'user_id',
-        'created_by_id'
+        'email',
+        'token',
+     
     ];
 }
