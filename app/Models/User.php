@@ -27,6 +27,7 @@ class User extends Authenticatable
         'phone_ext',
         'mobile',
         'contact_preference',
+        'role_id',
         'status',
         'type_id',
         'created_by_id'
@@ -39,8 +40,7 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'remember_token',
-        'role_id'
+        'remember_token'
     ];
 
     /**

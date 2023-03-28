@@ -9,22 +9,19 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-
-
-class VerifyEmail extends Mailable
+class password_reset extends Mailable
 {
     use Queueable, SerializesModels;
-
-    public $token;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($pin) {
-        $this->pin=$pin;
-      }
+    public function __construct()
+    {
+        //
+    }
 
     /**
      * Get the message envelope.
@@ -34,7 +31,7 @@ class VerifyEmail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Verify Email',
+            subject: 'Password Reset',
         );
     }
 
@@ -46,7 +43,7 @@ class VerifyEmail extends Mailable
     public function content()
     {
         return new Content(
-            markdown: 'emails.verify',
+            view: 'password',
         );
     }
 
@@ -59,5 +56,4 @@ class VerifyEmail extends Mailable
     {
         return [];
     }
-
 }
