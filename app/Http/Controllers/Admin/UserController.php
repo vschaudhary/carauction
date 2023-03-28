@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\Paginator;
+use App\Http\Requests\StoreUserRequest;
 
 class UserController extends Controller {
     /**
@@ -72,7 +73,7 @@ class UserController extends Controller {
     */
 
     public function show( $id ) {
-
+        dd('show');
     }
 
     /**
@@ -94,9 +95,34 @@ class UserController extends Controller {
     * @return \Illuminate\Http\Response
     */
 
-    public function update( Request $request, $id ) {
-        //
-    }
+    public function update(StoreUserRequest $request, $id ) {
+        try {
+            DB::beginTransaction();
+            //Validate request data
+            $validated = $request->validated();      
+            $success = [];      
+            //after validation
+            $user = User::find($id);
+            $data = $validated['profile'];
+            if($user){
+                $user->update($data);
+                $dealer = Dealership::find($validated['dealership']['id']);
+                if(!$dealer){
+                    DB::rollback();
+                    return $this->sendError( 'Server Error', 'Something went wrong.', 500 );
+                }
+                $dealer->update($validated['dealership']);
+                DB::commit();
+                return $this->sendResponse( $user, 'User Updated successfully.' ); 
+            } else {
+                return $this->sendError('User not found!',[], 404 );
+                DB::rollback();
+            }
+        } catch ( Exception $e ) {
+            DB::rollback();
+            return $this->sendError( 'Server Error', $e->getMessage(), 500 );
+        }
+    }   
 
     /**
     * Remove the specified resource from storage.
@@ -106,6 +132,20 @@ class UserController extends Controller {
     */
 
     public function destroy( $id ) {
-        //
+        try {
+        DB::beginTransaction();
+        $user = User::find($id);
+        if(!$user){
+            return $this->sendError('User not found!',[], 404 );
+        }
+        if($user->delete()){
+            $dealer = Dealership::where('user_id' , $id)->delete();
+            DB::commit();
+            return $this->sendResponse( [], 'User with dealership data Deleted successfully.' ); 
+        }
+        }  catch ( Exception $e ) {
+            DB::rollback();
+            return $this->sendError( 'Server Error', $e->getMessage(), 500 );
+        }
     }
 }

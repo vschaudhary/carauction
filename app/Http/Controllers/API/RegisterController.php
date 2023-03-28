@@ -30,6 +30,10 @@ class RegisterController extends Controller
         try {
             DB::beginTransaction();
             $success = [];
+            $emailExists = User::withTrashed()->where('email', $validated['profile']['email'])->get()->count();
+            if($emailExists > 0){
+                return $this->sendError( 'Error', 'This email has already been taken.', 403);
+            }
             $userData= [
                 'password' => Hash::make('Mind@123'),
                 'role_id' => Constants::TYPE_USER,
@@ -70,11 +74,9 @@ class RegisterController extends Controller
     {
         if ( Auth::attempt( [ 'email' => $request->email, 'password' => $request->password ] ) ) {
             $user = Auth::user();
-            dd($user->createToken('MyApp')->accessToken);
             $user[ 'token' ] =  $user->createToken('MyApp')->accessToken;
-            return $this->sendResponse( $success, 'User login successfully.' );
+            return $this->sendResponse( $user, 'User login successfully.' );
         } else {
-
             return $this->sendError( 'Unauthorised.', [ 'error'=>'Incorrect email or password entered.' ], 401 );
         }
 

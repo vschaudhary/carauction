@@ -30,6 +30,7 @@ return new class extends Migration
             $table->bigInteger('created_by_id')->unsigned()->nullable();
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

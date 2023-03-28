@@ -24,13 +24,15 @@ class StoreUserRequest extends FormRequest
     public function rules()
     {
         return [
+            'profile.id' => 'integer',
             'profile.first_name' => 'required|string',
             'profile.last_name' => 'required|string',
-            'profile.email' => 'required|email|unique:users,email',
+            'profile.email' => 'required|email',
             'profile.phone' => 'required|string',
             'profile.phone_ext' => 'string',
             'profile.mobile' => 'string',
             'profile.contact_preference' => 'string',
+            'dealership.id' => 'integer',
             'dealership.name' => 'required|string',
             'dealership.street_name' => 'required|string',
             'dealership.city' => 'required|string',

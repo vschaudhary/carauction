@@ -35,8 +35,10 @@ Route::post('reset-password', [ResetPasswordController::class, 'resetPassword'])
 
 
 Route::middleware('auth:api')->group( function () {
-    Route::post('abc', [RegisterController::class, 'abc']);
-
-    Route::apiResource('users', UserController::class);
-
+    // Route::apiResource('users', UserController::class);
+    Route::get('users', [UserController::class, 'index'])->name('users.index');
+    Route::post('users', [UserController::class, 'store'])->name('users.store');
+    Route::get('users/{user}', [UserController::class, 'show'])->name('users.show');
+    Route::put('users/{user}', [UserController::class, 'update'])->name('users.update');
+    Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 });
