@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Mail\ResetPassword;
@@ -60,8 +60,8 @@ class ForgotPasswordController extends Controller
 // verifyPin 6 pin digit token
 public function verifyPin(Request $request)
 {
+
     $validator = Validator::make($request->all(), [
-        // 'email' => ['required', 'string', 'email', 'max:255'],
         'token' => ['required'],
     ]);
 
@@ -72,7 +72,6 @@ public function verifyPin(Request $request)
     try{
     $data = [];
     $check = password_reset::where([
-        // 'email'=> $request->email,
         'token'=> $request->token
     ]);
 
@@ -80,17 +79,15 @@ public function verifyPin(Request $request)
     if ($check->exists()) {
         $difference = Carbon::now()->diffInSeconds($check->first()->created_at);
         $difference2 = $check->first()->email;
+        // dd($difference2);
         if ($difference > 3600) {
             return $this->sendError([],'Token Expired! please regenerate again',401 );
         }
 
         $delete = password_reset::where([
-            // 'email'=> $request->email,
             'token'=> $request->token,
         ])->delete();
-
-        return  $this->sendResponse([],"You can now reset your password",200);
-            
+        return  $this->sendResponse(['email'=>$difference2],"You can now reset your password",$difference2);
     } 
     else {
         return $this->sendError([],'Invalid token',401);
