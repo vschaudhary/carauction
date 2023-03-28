@@ -30,7 +30,8 @@ class User extends Authenticatable
         'role_id',
         'status',
         'type_id',
-        'created_by_id'
+        'created_by_id',
+        'password',
     ];
 
     /**
@@ -54,6 +55,6 @@ class User extends Authenticatable
 
     public function dealership()
     {
-        return $this->hasOne('App\Models\Dealership');
+        return $this->hasOne('App\Models\Dealership','user_id');
     }
 }

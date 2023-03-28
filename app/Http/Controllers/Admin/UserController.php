@@ -22,7 +22,6 @@ class UserController extends Controller {
 
     public function index( Request $request ) {
         try {
-
             $users = [];
             $search = $request->search;
             $sorting = $request->sorting;
