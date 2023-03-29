@@ -23,12 +23,16 @@ class ResetPasswordController extends Controller {
         }
         try {
             $data = [];
-            $user = User::where( 'email', $request->email );
-            $user->update( [
-                'password'=>Hash::make( $request->password )
-            ] );
-
-            return $this->sendResponse( $data, 'Your password has been reset successfully', 200 );
+            $user = User::where( 'email', $request->email )->first();
+            if($user){
+                $user->update( [
+                    'password'=>Hash::make( $request->password )
+                ] );
+                return $this->sendResponse( $data, 'Your password has been reset successfully', 200 );
+            }
+            else{
+                return $this->sendResponse( $data, 'User not found!', 404 );
+            }
         } catch ( Exception $e ) {
             return $this->sendError( 'Server Error', $e->getMessage(), 500 );
         }

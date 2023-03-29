@@ -25,7 +25,6 @@ use App\Http\Controllers\Admin\UserController;
 
 
 Route::post('login', [RegisterController::class, 'login']);
-Route::get('Unauthorised', [RegisterController::class, 'Unauthorised'])->name('login');
 Route::post('register', [RegisterController::class, 'register']);
 
  // Password reset routes
@@ -34,8 +33,7 @@ Route::post('verify/pin', [ForgotPasswordController::class, 'verifyPin']);
 Route::post('reset-password', [ResetPasswordController::class, 'resetPassword']);
 
 
-Route::middleware('auth:api')->group( function () {
-    // Route::apiResource('users', UserController::class);
+Route::group(['middleware' => ['IsAdmin','auth:api']], function () {
     Route::get('users', [UserController::class, 'index'])->name('users.index');
     Route::post('users', [UserController::class, 'store'])->name('users.store');
     Route::get('users/{user}', [UserController::class, 'show'])->name('users.show');

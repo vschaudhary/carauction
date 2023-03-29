@@ -77,19 +77,8 @@ class RegisterController extends Controller
             $user[ 'token' ] =  $user->createToken('MyApp')->accessToken;
             return $this->sendResponse( $user, 'User login successfully.' );
         } else {
-            return $this->sendError( 'Unauthorised.', [ 'error'=>'Incorrect email or password entered.' ], 401 );
+            return $this->sendError( [], [ 'error'=>'Incorrect email or password entered.' ], 401 );
         }
 
     }
-
-    public function Unauthorised( Request $request )
-    {
-        return $this->sendError( 'Unauthorised.', [ 'error'=>'Unauthorised' ], 401 );
-    }
-
-    public function abc( Request $request )
-    {
-        return Auth::user();
-    }
-
 }

@@ -113,6 +113,7 @@ class UserController extends Controller {
                 }
                 $dealer->update($validated['dealership']);
                 DB::commit();
+                $user = User::with('dealership')->find($id);
                 return $this->sendResponse( $user, 'User Updated successfully.' ); 
             } else {
                 return $this->sendError('User not found!',[], 404 );
