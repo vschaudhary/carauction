@@ -59,7 +59,8 @@ class StoreUserRequest extends FormRequest
             'dealership.city.required' => 'City is required!',
             'dealership.state.required' => 'State is required!',
             'dealership.zip_code.required' => 'Zip code is required!',
-            'dealership.car_stock.required' => 'Car stock is required!'
+            'dealership.car_stock.required' => 'Car stock is required!',
+            'profile.email.email' => 'Email is not valid!',
         ];
     }
 }
