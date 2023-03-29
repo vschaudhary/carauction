@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-
 use App\Http\Controllers\Controller;
 use App\Constant\Constants;
 use App\Models\User;
@@ -22,23 +21,28 @@ class UserController extends Controller {
     */
 
     public function index( Request $request ) {
-        try {
-            $users = [];
-            $search = $request->search;
-            $sorting = $request->sorting;
-            $users = User::query();
+        try { 
+            $searchItem = $request->search;
+            $sortBy = $request->sort;
 
-            if ( !empty( $search ) ) {
-                $users = $users->where( 'email', 'LIKE', "%{$search}%" );
+            //return all the users
+            $users = User::with('dealership')->allUsers();
+            
+            //return searched users
+            $users = $searchItem ? $users->search($searchItem) : $users;
+
+            //sort users by email id
+            $users = $sortBy ? $users->orderBy( 'email', $sortBy ) : $users;
+
+            $users = $users->get();
+
+            if($users->count() > 0){
+                $message = 'Users fetched successfully!';
+            }else{
+                $message =  'Users not found!';
             }
 
-            elseif ( !empty( $sorting ) ) {
-                $users = $users->orderBy( 'email', 'desc' );
-            } else {
-                $users = $users->where( 'role_id', 2 );
-            }
-            $users = $users->paginate( 20 );
-            return $this->sendResponse( $users, 'ok' );
+            return $this->sendResponse( $users, $message );
         } catch ( Exception $e ) {
             return $this->sendError( 'Server Error', $e->getMessage(), 500 );
         }
@@ -73,7 +77,9 @@ class UserController extends Controller {
     */
 
     public function show( $id ) {
-        dd('show');
+        $user = User::with('dealership')->find($id);
+        $message =  $user ?  "User Found" : 'User Not Found!';
+        return $this->sendResponse( $user, $message ); ;
     }
 
     /**

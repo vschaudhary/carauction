@@ -57,4 +57,25 @@ class User extends Authenticatable
     {
         return $this->hasOne('App\Models\Dealership','user_id');
     }
+
+    public function scopeSearch($query, $searchItem)
+    {
+        return $query->where('email', 'LIKE', '%' . $searchItem .'%');
+    }
+
+    public function scopeActiveUsers($query)
+    {
+        return $query->where('role_id', 2)->where('status', 1);
+    }
+
+    public function scopeInactiveUsers($query)
+    {
+        return $query->where('role_id', 2)->where('status', 0);
+    }
+
+    public function scopeAllUsers($query)
+    {
+        return $query->where('role_id', 2);
+    }
+
 }

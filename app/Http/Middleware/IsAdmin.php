@@ -20,6 +20,6 @@ class IsAdmin
         if (Auth::user() &&  Auth::user()->role_id == 1) {
             return $next($request);
         }
-        return response()->json([ 'error'=>'Unauthorised! You do not have admin access!', 'status_code' => 401]);
+        return response()->json([ 'error'=>'Unauthorised! You do not have admin access!', 'status_code' => 403]);
     }
 }
