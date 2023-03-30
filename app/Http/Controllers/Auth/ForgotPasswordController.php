@@ -49,7 +49,7 @@ class ForgotPasswordController extends Controller
         // }
         
     } else {
-        return $this->sendError([],'This email does not exist',401);
+        return $this->sendError('This email does not exist', [],401);
       }
     }
     catch (Exception $e){
@@ -77,17 +77,17 @@ public function verifyPin(Request $request)
 
 
     if ($check->exists()) {
-        $difference = Carbon::now()->diffInSeconds($check->first()->created_at);
+        $difference = $check->where('created_at','>',Carbon::now()->subHours(1))->first();
         $difference2 = $check->first()->email;
         // dd($difference2);
         if ($difference > 3600) {
-            return $this->sendError([],'Token Expired! please regenerate again',401 );
+            return $this->sendError('Token Expired! please regenerate again', [] ,401 );
         }
 
         $delete = password_reset::where([
             'token'=> $request->token,
         ])->delete();
-        return  $this->sendResponse(['email'=>$difference2],"You can now reset your password",$difference2);
+        return  $this->sendResponse(['email'=>$difference2],"You can now reset your password");
     } 
     else {
         return $this->sendError([],'Invalid token',401);
