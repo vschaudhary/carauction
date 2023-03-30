@@ -110,6 +110,10 @@ class UserController extends Controller {
             //after validation
             $user = User::find($id);
             $data = $validated['profile'];
+            $emailExists = User::withTrashed()->where('email', $validated['profile']['email'])->where('id', '!=', $id)->get()->count();
+            if($emailExists > 0){
+                return $this->sendError( 'Error', 'This email has already been taken.', 403);
+            }
             if($user){
                 $user->update($data);
                 $dealer = Dealership::find($validated['dealership']['id']);
