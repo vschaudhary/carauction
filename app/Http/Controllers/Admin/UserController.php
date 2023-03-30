@@ -116,7 +116,7 @@ class UserController extends Controller {
             }
             if($user){
                 $user->update($data);
-                $dealer = Dealership::find($validated['dealership']['id']);
+                $dealer = Dealership::where('user_id', $id)->firstOrFail();
                 if(!$dealer){
                     DB::rollback();
                     return $this->sendError( 'Server Error', 'Something went wrong.', 500 );
