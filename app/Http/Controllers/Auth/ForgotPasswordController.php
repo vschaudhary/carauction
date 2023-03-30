@@ -77,12 +77,12 @@ public function verifyPin(Request $request)
 
 
     if ($check->exists()) {
-        $difference = $check->where('created_at','>',Carbon::now()->subHours(1))->first();
+        // $difference = password_reset::where(['token'=> $request->token])->where('created_at','>',Carbon::now('UTC')->subHours(1))->exists();
         $difference2 = $check->first()->email;
         // dd($difference2);
-        if ($difference > 3600) {
-            return $this->sendError('Token Expired! please regenerate again', [] ,401 );
-        }
+        // if ($difference) {
+        //     return $this->sendError('Token Expired! please regenerate again', [] ,401 );
+        // }
 
         $delete = password_reset::where([
             'token'=> $request->token,
@@ -90,7 +90,7 @@ public function verifyPin(Request $request)
         return  $this->sendResponse(['email'=>$difference2],"You can now reset your password");
     } 
     else {
-        return $this->sendError([],'Invalid token',401);
+        return $this->sendError('Invalid token', [],401);
     }
     }catch (Exception $e){
         return $this->sendError('Server Error', $e->getMessage(), 500);
