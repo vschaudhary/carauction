@@ -38,7 +38,8 @@ class StoreUserRequest extends FormRequest
             'dealership.city' => 'required|string',
             'dealership.state' => 'required|string',
             'dealership.zip_code' => 'required|string',
-            'dealership.car_stock' => 'required|string'
+            'dealership.car_stock' => 'required|string',
+            'dealership.hear_from' => 'required|string'
         ];
     }
 
@@ -61,6 +62,7 @@ class StoreUserRequest extends FormRequest
             'dealership.zip_code.required' => 'Zip code is required!',
             'dealership.car_stock.required' => 'Car stock is required!',
             'profile.email.email' => 'Email is not valid!',
+            'dealership.required' => 'Hear from is required!',
         ];
     }
 }

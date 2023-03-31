@@ -26,6 +26,7 @@ class Dealership extends Model
         'status',
         'type_id',
         'user_id',
-        'created_by_id'
+        'created_by_id',
+        'hear_from',
     ];
 }

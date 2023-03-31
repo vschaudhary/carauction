@@ -7,6 +7,7 @@ use App\Http\Controllers\API\RegisterController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\API\UserController as UsersController;
 
 /*
@@ -36,11 +37,17 @@ Route::post('reset-password', [ResetPasswordController::class, 'resetPassword'])
 
 
 Route::group(['middleware' => ['IsAdmin','auth:api']], function () {
+    
+    //User Module Routes
     Route::get('users', [UserController::class, 'index'])->name('users.index');
     Route::post('users', [UserController::class, 'store'])->name('users.store');
     Route::get('users/{user}', [UserController::class, 'show'])->name('users.show');
     Route::put('users/{user}', [UserController::class, 'update'])->name('users.update');
     Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.`destroy`');
+
+    //Admin Profile Module Routes
+    Route::get('profile',[ProfileController::class, 'show'])->name('admin.profile');
+    Route::put('profile/update',[ProfileController::class, 'update'])->name('admin.profile.update');
 });
 
 Route::group(['prefix' => 'user', 'middleware' => ['auth:api']], function () {

@@ -45,7 +45,7 @@ class RegisterController extends Controller
             $user = User::create(array_merge($validated['profile'],$userData));
             if($user){
                 $dealershipDetails = new Dealership($validated['dealership']);  
-                $dealershipDetails->status = Constants::STATE_ACTIVE;
+                $dealershipDetails->status = Constants::STATE_DEACTIVATE;
                 $dealershipDetails->type_id = Constants::STATE_DEACTIVATE;  
                 //save user's dealership data            
                 $dealer = $user->dealership()->save($dealershipDetails);
