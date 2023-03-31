@@ -27,6 +27,7 @@ use App\Http\Controllers\API\UserController as UsersController;
 
 Route::post('login', [RegisterController::class, 'login']);
 Route::post('register', [RegisterController::class, 'register']);
+Route::get('logout', [RegisterController::class, 'logout'])->name('logout')->middleware('auth:api');
 
  // Password reset routes
 Route::post('forgot-password',  [ForgotPasswordController::class, 'forgotPassword']);
@@ -46,3 +47,5 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth:api']], function () {
     Route::get('profile', [UsersController::class, 'show'])->name('view.show');
     Route::put('update', [UsersController::class, 'update'])->name('users.update');
 });
+
+

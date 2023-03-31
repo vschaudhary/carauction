@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StoreUserRequest;
 use Exception;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 
 class RegisterController extends Controller
  {
@@ -79,6 +80,18 @@ class RegisterController extends Controller
         } else {
             return $this->sendError( [], [ 'error'=>'Incorrect email or password entered.' ], 401 );
         }
+    }
 
+    public function logout()
+    {      
+        if(Auth::user()){
+            Auth::user()->tokens->each(function ($token) {
+                $token->delete();
+            });
+            Session::flush();
+            return $this->sendResponse( [], 'Logout successfully.' );
+        }  else {
+            return $this->sendError( [], [ 'error'=>'User is not login!' ], 400 );
+        }
     }
 }
