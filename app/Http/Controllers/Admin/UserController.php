@@ -79,7 +79,7 @@ class UserController extends Controller {
     public function show( $id ) {
         $user = User::with('dealership')->find($id);
         $message =  $user ?  "User Found" : 'User Not Found!';
-        return $this->sendResponse( $user, $message ); ;
+        return $this->sendResponse( $user, $message );
     }
 
     /**

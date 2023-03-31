@@ -7,6 +7,7 @@ use App\Http\Controllers\API\RegisterController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\API\UserController as UsersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,5 +39,10 @@ Route::group(['middleware' => ['IsAdmin','auth:api']], function () {
     Route::post('users', [UserController::class, 'store'])->name('users.store');
     Route::get('users/{user}', [UserController::class, 'show'])->name('users.show');
     Route::put('users/{user}', [UserController::class, 'update'])->name('users.update');
-    Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.`destroy`');
+});
+
+Route::group(['prefix' => 'user', 'middleware' => ['auth:api']], function () {
+    Route::get('profile', [UsersController::class, 'show'])->name('view.show');
+    Route::put('update', [UsersController::class, 'update'])->name('users.update');
 });

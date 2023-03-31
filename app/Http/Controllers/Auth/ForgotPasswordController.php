@@ -60,42 +60,31 @@ class ForgotPasswordController extends Controller
 // verifyPin 6 pin digit token
 public function verifyPin(Request $request)
 {
-
+    //Validate Token
     $validator = Validator::make($request->all(), [
         'token' => ['required'],
     ]);
-
     if ($validator->fails()) {
         return $this->sendError('Validation Error.', $validator->errors(), 403);       
-    }
-    
-    try{
-    $data = [];
-    $check = password_reset::where([
-        'token'=> $request->token
-    ]);
-
-
-    if ($check->exists()) {
-        // $difference = password_reset::where(['token'=> $request->token])->where('created_at','>',Carbon::now('UTC')->subHours(1))->exists();
-        $difference2 = $check->first()->email;
-        // dd($difference2);
-        // if ($difference) {
-        //     return $this->sendError('Token Expired! please regenerate again', [] ,401 );
-        // }
-
-        $delete = password_reset::where([
-            'token'=> $request->token,
-        ])->delete();
-        return  $this->sendResponse(['email'=>$difference2],"You can now reset your password");
     } 
-    else {
-        return $this->sendError('Invalid token', [],401);
-    }
+
+    try{
+        $token = password_reset::where(['token'=> $request->token])->first();
+
+        if ($token) {  
+            if (now() > $token->updated_at->addHour()) {
+                return $this->sendError('Token Expired! please regenerate.', [] ,401 );
+            }
+            $delete = password_reset::where([
+                'token'=> $request->token,
+            ])->delete();            
+            return  $this->sendResponse(['email'=> $token->email],"You can now reset your password");
+        } 
+        else {
+            return $this->sendError('Invalid token', [],401);
+        }
     }catch (Exception $e){
         return $this->sendError('Server Error', $e->getMessage(), 500);
     }
-
    }
-
 }
