@@ -53,8 +53,11 @@ class UserController extends Controller
     {
         $userId = Auth::id();
         $user = User::with('dealership')->find($userId);
-        $message =  $user ?  "User Found" : 'User Not Found!';
-        return $this->sendResponse( $user, $message );
+        if($user){
+            return $this->sendResponse( $user, 'User found successfully.'); 
+        } else {
+            return $this->sendError('User not found!',[], 404 );
+        }
     }
 
     /**
