@@ -76,9 +76,22 @@ class RegisterController extends Controller
     {
         if ( Auth::attempt( [ 'email' => $request->email, 'password' => $request->password ] ) ) {
             $user = Auth::user();
+
+            //check if user approved by admin
+            if($user->type_id != "1"){
+                return $this->sendError( [], ['error' => 'Your account is pending for admin approval!'], 400);
+            }
+
+            //check if user has set password
+            if($user->email_verified_at == null){
+                return $this->sendError( [], ['error' => 'Please check your email!'], 400);
+            }
+
+            //check if user is enabled
             if($user->status != "1"){
                 return $this->sendError( [], ['error' => 'Your account is blocked by admin!'], 400);
             }
+
             $user[ 'token' ] =  $user->createToken('MyApp')->accessToken;
             return $this->sendResponse( $user, 'User login successfully.' );
         } else {

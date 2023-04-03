@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\API\UserController as UsersController;
+use App\Http\Controllers\Admin\DocumentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +46,7 @@ Route::group(['middleware' => ['IsAdmin','auth:api']], function () {
     Route::put('users/{user}', [UserController::class, 'update'])->name('users.update');
     Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     Route::get('users/pending', [UserController::class, 'pending'])->name('users.pending');
+    Route::put('users/verify/account/{id}', [DocumentController::class, 'verify'])->name('approve.user');
 
     //Admin Profile Module Routes
     Route::get('profile',[ProfileController::class, 'show'])->name('admin.profile');

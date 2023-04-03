@@ -28,7 +28,8 @@ class AdminSeeder extends Seeder
             "password" => Hash::make('Mind@123'),
             "role_id" => Constants::TYPE_ADMIN,
             "status" => Constants::STATE_ACTIVE,
-            "type_id" => Constants::STATE_ACTIVE 
+            "type_id" => Constants::STATE_ACTIVE,
+            "email_verified_at" => now(),
         ]);
     }
 }
