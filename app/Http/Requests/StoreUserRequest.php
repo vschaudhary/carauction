@@ -32,6 +32,7 @@ class StoreUserRequest extends FormRequest
             'profile.phone_ext' => 'nullable|string',
             'profile.mobile' => 'nullable|string',
             'profile.contact_preference' => 'nullable|string',
+            'profile.status' => 'nullable|string',
             'dealership.id' => 'nullable|integer',
             'dealership.name' => 'required|string',
             'dealership.street_name' => 'required|string',
@@ -40,7 +41,8 @@ class StoreUserRequest extends FormRequest
             'dealership.zip_code' => 'required|string',
             'dealership.car_stock' => 'required|string',
             'dealership.hear_from' => 'required|string',
-            'dealership.website' => 'nullable|url'
+            'dealership.website' => 'nullable|string',
+            'dealership.status' => 'nullable|string'
         ];
     }
 
@@ -64,7 +66,8 @@ class StoreUserRequest extends FormRequest
             'dealership.car_stock.required' => 'Car stock is required!',
             'profile.email.email' => 'Email is not valid!',
             'dealership.hear_from.required' => 'Hear from is required!',
-            'dealership.website' => 'Website must be a valid URL.'
+            'dealership.website' => 'nullable|string',
+            'dealership.website.string' => 'Website must be a valid URL string.'
         ];
     }
 }

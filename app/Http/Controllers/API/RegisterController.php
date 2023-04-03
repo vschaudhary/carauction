@@ -43,6 +43,7 @@ class RegisterController extends Controller
             ];          
             //Save User
             $user = User::create(array_merge($validated['profile'],$userData));
+            
             if($user){
                 $dealershipDetails = new Dealership($validated['dealership']);  
                 $dealershipDetails->status = Constants::STATE_DEACTIVATE;
@@ -75,6 +76,9 @@ class RegisterController extends Controller
     {
         if ( Auth::attempt( [ 'email' => $request->email, 'password' => $request->password ] ) ) {
             $user = Auth::user();
+            if($user->status != "1"){
+                return $this->sendError( [], ['error' => 'Your account is blocked by admin!'], 400);
+            }
             $user[ 'token' ] =  $user->createToken('MyApp')->accessToken;
             return $this->sendResponse( $user, 'User login successfully.' );
         } else {

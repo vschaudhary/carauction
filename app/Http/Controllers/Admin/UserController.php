@@ -24,10 +24,29 @@ class UserController extends Controller {
         try { 
             $searchItem = $request->search;
             $sortBy = $request->sort;
+            $searchByType = $request->type;
 
-            //return all the users
-            $users = User::with('dealership')->allUsers();
-            
+            $users = User::with('dealership');
+            //return users based on type like pending for admin approval,active, inactive
+            switch($searchByType)
+            {
+                case('pending');
+                    //users pending for admin approval
+                    $users = $users->pendingApproval();
+                    break;
+                case('active');
+                    //active users with status 1
+                    $users = $users->active();
+                    break;
+                case('inactive');
+                    //Inactive users with status 0
+                    $user = $users->inactive();
+                    break;
+                default :
+                    //all the users
+                    $users = $users->all();
+                    break;
+            }
             //return searched users
             $users = $searchItem ? $users->search($searchItem) : $users;
 
@@ -35,7 +54,7 @@ class UserController extends Controller {
             $users = $sortBy ? $users->orderBy( 'email', $sortBy ) : $users;
 
             $users = $users->get();
-
+            
             if($users->count() > 0){
                 $message = 'Users fetched successfully!';
             }else{

@@ -43,7 +43,8 @@ Route::group(['middleware' => ['IsAdmin','auth:api']], function () {
     Route::post('users', [UserController::class, 'store'])->name('users.store');
     Route::get('users/{user}', [UserController::class, 'show'])->name('users.show');
     Route::put('users/{user}', [UserController::class, 'update'])->name('users.update');
-    Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.`destroy`');
+    Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::get('users/pending', [UserController::class, 'pending'])->name('users.pending');
 
     //Admin Profile Module Routes
     Route::get('profile',[ProfileController::class, 'show'])->name('admin.profile');

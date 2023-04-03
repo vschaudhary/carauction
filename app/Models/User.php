@@ -63,19 +63,24 @@ class User extends Authenticatable
         return $query->where('email', 'LIKE', '%' . $searchItem .'%');
     }
 
-    public function scopeActiveUsers($query)
+    public function scopeActive($query)
     {
         return $query->where('role_id', 2)->where('status', 1);
     }
 
-    public function scopeInactiveUsers($query)
+    public function scopeInactive($query)
     {
         return $query->where('role_id', 2)->where('status', 0);
     }
 
-    public function scopeAllUsers($query)
+    public function scopeAll($query)
     {
         return $query->where('role_id', 2);
+    }
+
+    public function scopePendingApproval($query)
+    {
+        return $query->where('type_id', 0);
     }
 
 }
