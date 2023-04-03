@@ -78,7 +78,26 @@ class ProfileController extends Controller
      */
     public function update(Request $request)
     {
-        dd($request->all());
+        try{
+            $data = $request->all();
+            $id = Auth::id();
+            $emailExists = User::withTrashed()->where('email', $data['email'])->where('id', '!=', $id)->get()->count();
+            if($emailExists > 0){
+                return $this->sendError( 'Error', 'This email has already been taken.', 403);
+            }
+            $admin = User::find($id);
+            if($admin){
+                if($admin->update($data)){
+                    return $this->sendResponse( $admin, 'Admin updated successfully.' ); 
+                } else {
+                    return $this->sendError('Somthing went wrong, please try again!',[], 500 );
+                }
+            } else {
+                return $this->sendError('Admin not found!',[], 404 );
+            }
+        } catch ( Exception $e ) {
+            return $this->sendError( 'Server Error', $e->getMessage(), 500 );
+        }
     }
 
     /**

@@ -105,7 +105,7 @@ class UserController extends Controller {
         try {
             DB::beginTransaction();
             //Validate request data
-            $validated = $request->validated();      
+            $validated = $request->validated();   
             $success = [];      
             //after validation
             $user = User::find($id);

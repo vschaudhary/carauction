@@ -24,22 +24,23 @@ class StoreUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'profile.id' => 'integer',
+            'profile.id' => 'nullable|integer',
             'profile.first_name' => 'required|string',
             'profile.last_name' => 'required|string',
             'profile.email' => 'required|email',
             'profile.phone' => 'required|string',
-            'profile.phone_ext' => 'string',
-            'profile.mobile' => 'string',
-            'profile.contact_preference' => 'string',
-            'dealership.id' => 'integer',
+            'profile.phone_ext' => 'nullable|string',
+            'profile.mobile' => 'nullable|string',
+            'profile.contact_preference' => 'nullable|string',
+            'dealership.id' => 'nullable|integer',
             'dealership.name' => 'required|string',
             'dealership.street_name' => 'required|string',
             'dealership.city' => 'required|string',
             'dealership.state' => 'required|string',
             'dealership.zip_code' => 'required|string',
             'dealership.car_stock' => 'required|string',
-            'dealership.hear_from' => 'required|string'
+            'dealership.hear_from' => 'required|string',
+            'dealership.website' => 'nullable|url'
         ];
     }
 
@@ -62,7 +63,8 @@ class StoreUserRequest extends FormRequest
             'dealership.zip_code.required' => 'Zip code is required!',
             'dealership.car_stock.required' => 'Car stock is required!',
             'profile.email.email' => 'Email is not valid!',
-            'dealership.required' => 'Hear from is required!',
+            'dealership.hear_from.required' => 'Hear from is required!',
+            'dealership.website' => 'Website must be a valid URL.'
         ];
     }
 }
