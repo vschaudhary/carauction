@@ -16,6 +16,8 @@ return [
     'default' => env('MAIL_MAILER', 'smtp'),
     'driver' => env('MAIL_DRIVER', 'smtp'),
 
+    
+
     /*
     |--------------------------------------------------------------------------
     | Mailer Configurations
@@ -34,20 +36,22 @@ return [
     |
     */
 
-    'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
-    // 'port' => env('MAIL_PORT', 465),
-    // 'encryption' => env('MAIL_ENCRYPTION', 'tls'),
+    'host' => env('MAIL_HOST', 'smtp.gmail.com'),
+    'port' => env('MAIL_PORT', 587),
+    'encryption' => env('MAIL_ENCRYPTION', 'tls'),
 
     'mailers' => [
         'smtp' => [
             'transport' => 'smtp',
-            'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
+            'host' => env('MAIL_HOST', 'smtp.gmail.com'),
             'port' => env('MAIL_PORT', 587),
             'encryption' => env('MAIL_ENCRYPTION', 'tls'),
             'username' => env('MAIL_USERNAME'),
             'password' => env('MAIL_PASSWORD'),
             'timeout' => null,
             'local_domain' => env('MAIL_EHLO_DOMAIN'),
+
+          
         ],
 
         'ses' => [
@@ -60,6 +64,8 @@ return [
 
         'postmark' => [
             'transport' => 'postmark',
+            'message_stream_id' => env('POSTMARK_MESSAGE_STREAM_ID'),
+
         ],
 
         'sendmail' => [
@@ -119,6 +125,8 @@ return [
             resource_path('views/vendor/mail'),
         ],
     ],
+
+
 
     // 'stream' => [
     //     'ssl' => [
