@@ -45,6 +45,7 @@ Route::group(['middleware' => ['IsAdmin','auth:api']], function () {
     Route::get('users/{user}', [UserController::class, 'show'])->name('users.show');
     Route::put('users/{user}', [UserController::class, 'update'])->name('users.update');
     Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::put('users/status/update/{user}', [UserController::class, 'status'])->name('users.update.status');
     Route::get('users/pending', [UserController::class, 'pending'])->name('users.pending');
     Route::put('users/verify/account/{id}', [DocumentController::class, 'verify'])->name('approve.user');
 

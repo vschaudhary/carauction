@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 Use App\Models\User;
+use Validator;
 
 class DocumentController extends Controller
 {
@@ -13,10 +14,18 @@ class DocumentController extends Controller
      * 
      */    
     public function verify(Request $request, $id) {
-        //Send email to user to set their password
+        $data = $request->all();
+        $validator = Validator::make($request->all(), [
+            'verify' => ['required', 'in:0,1'],
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendError('Validation Error.', $validator->errors(), 403);       
+        }
+
         $user  = User::find($id);
         if($user){
-            $data = $request->all();
+            //Send email to user to set their password
             if($data['verify'] == 1){
                 // Update user type_id to 1 and user status to 1
                 $user->update(['type_id' => "1", "status" => "1"]);

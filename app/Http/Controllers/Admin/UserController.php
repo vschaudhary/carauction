@@ -178,4 +178,31 @@ class UserController extends Controller {
             return $this->sendError( 'Server Error', $e->getMessage(), 500 );
         }
     }
+
+    /**
+     * Update user status
+     */
+    public function status(Request $request, $id)
+    {
+        $data = $request->all();
+        $validator = Validator::make($request->all(), [
+            'status' => ['required', 'in:0,1'],
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendError('Validation Error.', $validator->errors(), 403);       
+        }
+
+        $user  = User::find($id);
+        if($user){
+            if($user->update($data)){
+                return $this->sendResponse($user, "Status updated successfully!");
+            }
+            else{
+                return $this->sendError( 'Error', 'Something went wrong!', 500 );
+            }
+        } else {
+            return $this->sendError( 'Error', 'User not found!', 400 );
+        }       
+    }
 }
