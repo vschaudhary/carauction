@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\API\UserController as UsersController;
 use App\Http\Controllers\Admin\DocumentController;
+use App\Http\Controllers\Admin\VehicleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,8 +55,16 @@ Route::group(['middleware' => ['IsAdmin','auth:api']], function () {
 });
 
 Route::group(['prefix' => 'user', 'middleware' => ['auth:api']], function () {
+    //User account 
     Route::get('profile', [UsersController::class, 'show'])->name('view.show');
     Route::put('update', [UsersController::class, 'update'])->name('users.updates');
+
+    //Vehicle  Module APIs
+    Route::get('vehicles', [VehicleController::class, 'index'])->name('vehicles.index');
+    Route::post('vehicles', [VehicleController::class, 'store'])->name('vehicles.store');
+    Route::get('vehicles/{user}', [VehicleController::class, 'show'])->name('vehicles.show');
+    Route::put('vehicles/{user}', [VehicleController::class, 'update'])->name('vehicles.update');
+    Route::delete('vehicles/{user}', [VehicleController::class, 'destroy'])->name('vehicles.destroy');
 });
 
 

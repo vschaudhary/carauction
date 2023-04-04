@@ -38,16 +38,16 @@ class RegisterController extends Controller
             $userData= [
                 'password' => Hash::make('Mind@123'),
                 'role_id' => Constants::TYPE_USER,
-                'status' => Constants::STATE_DEACTIVATE,
-                'type_id' => Constants::STATE_DEACTIVATE  
+                'status' => Constants::STATE_INACTIVE,
+                'type_id' => Constants::STATE_INACTIVE  
             ];          
             //Save User
             $user = User::create(array_merge($validated['profile'],$userData));
             
             if($user){
                 $dealershipDetails = new Dealership($validated['dealership']);  
-                $dealershipDetails->status = Constants::STATE_DEACTIVATE;
-                $dealershipDetails->type_id = Constants::STATE_DEACTIVATE;  
+                $dealershipDetails->status = Constants::STATE_INACTIVE;
+                $dealershipDetails->type_id = Constants::STATE_INACTIVE;  
                 //save user's dealership data            
                 $dealer = $user->dealership()->save($dealershipDetails);
                 if(!$dealer){
