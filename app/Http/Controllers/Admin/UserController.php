@@ -12,6 +12,7 @@ use Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\Paginator;
 use App\Http\Requests\StoreUserRequest;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller {
     /**
@@ -84,8 +85,46 @@ class UserController extends Controller {
     * @return \Illuminate\Http\Response
     */
 
-    public function store( Request $request ) {
-        //
+    public function store( StoreUserRequest $request ) {
+
+        $validated = $request->validated();
+        //if data validated
+        try {
+            DB::beginTransaction();
+            $emailExists = User::withTrashed()->where('email', $validated['profile']['email'])->get()->count();
+            if($emailExists > 0){
+                return $this->sendError( 'Error', 'This email has already been taken.', 403);
+            }
+            $userData= [
+                'password' => Hash::make('Mind@123'),
+                'role_id' => Constants::TYPE_USER,
+                'status' => Constants::STATE_ACTIVE,
+                'type_id' => Constants::STATE_ACTIVE,
+                'created_by_id' => Auth::id()  
+            ];          
+            //Save User
+            $user = User::create(array_merge($validated['profile'],$userData));
+            if($user){
+                $dealershipDetails = new Dealership($validated['dealership']);  
+                $dealershipDetails->status = Constants::STATE_ACTIVE;
+                $dealershipDetails->type_id = Constants::STATE_ACTIVE;  
+                $dealershipDetails->created_by_id = Auth::id();
+                //save user's dealership data            
+                $dealer = $user->dealership()->save($dealershipDetails);
+                if(!$dealer){
+                    DB::rollback();
+                    return $this->sendError( 'Server Error', 'Something went wrong.', 500 );
+                }
+                DB::commit();
+                return $this->sendResponse( $user, 'User created successfully.' );
+            } else {
+                DB::rollback();
+                return $this->sendError( 'Server Error', 'Something went wrong.', 500 );
+            }
+        } catch ( Exception $e ) {
+            DB::rollback();
+            return $this->sendError( 'Server Error', $e->getMessage(), 500 );
+        }
     }
 
     /**
@@ -124,8 +163,7 @@ class UserController extends Controller {
         try {
             DB::beginTransaction();
             //Validate request data
-            $validated = $request->validated();   
-            $success = [];      
+            $validated = $request->validated();  
             //after validation
             $user = User::find($id);
             $data = $validated['profile'];
