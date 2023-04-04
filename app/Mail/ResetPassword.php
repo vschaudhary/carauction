@@ -43,7 +43,7 @@ class ResetPassword extends Mailable
     public function content()
     {
         return new Content(
-            markdown: 'emails.password',
+            markdown: 'password',
         );
     }
 
