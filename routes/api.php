@@ -37,8 +37,7 @@ Route::post('verify/pin', [ForgotPasswordController::class, 'verifyPin']);
 Route::post('reset-password', [ResetPasswordController::class, 'resetPassword']);
 
 
-Route::group(['middleware' => ['IsAdmin','auth:api']], function () {
-    
+Route::group(['middleware' => ['IsAdmin','auth:api']], function () {    
     //User Module Routes
     Route::get('users', [UserController::class, 'index'])->name('users.index');
     Route::post('users', [UserController::class, 'store'])->name('users.store');
