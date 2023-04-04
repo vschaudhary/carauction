@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Mail\ResetPassword;
 use App\Models\User;
 use App\Models\Dealership;
 use App\Models\password_reset;
@@ -13,6 +12,12 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Mail\Mailable;
+use App\Mail\MailNotify;
+use App\Mail\ResetPassword;
+
+ 
+
 
 class ForgotPasswordController extends Controller
 {
@@ -40,13 +45,11 @@ class ForgotPasswordController extends Controller
             'email'=> $request->email,
             'token'=>  $token
         ]);
-
-        // if ($password_reset) {
-        //     Mail::to($request->email)->send(new ResetPassword($token));
+        if ($password_reset) {
+            Mail::to($request->email)->send(new ResetPassword($token));
          
-            return $this->sendResponse(  $data,"Please check your email for a 6 digit pin"
-            );
-        // }
+            return $this->sendResponse(  $data,"Please check your email for a 6 digit pin");
+        }
         
     } else {
         return $this->sendError('This email does not exist', [],401);

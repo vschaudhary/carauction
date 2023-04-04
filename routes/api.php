@@ -56,7 +56,7 @@ Route::group(['middleware' => ['IsAdmin','auth:api']], function () {
 
 Route::group(['prefix' => 'user', 'middleware' => ['auth:api']], function () {
     Route::get('profile', [UsersController::class, 'show'])->name('view.show');
-    Route::put('update', [UsersController::class, 'update'])->name('users.update');
+    Route::put('update', [UsersController::class, 'update'])->name('users.updates');
 });
 
 
