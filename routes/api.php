@@ -10,7 +10,8 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\API\UserController as UsersController;
 use App\Http\Controllers\Admin\DocumentController;
-use App\Http\Controllers\Admin\VehicleController;
+use App\Http\Controllers\API\VehicleController;
+use App\Http\Controllers\API\EventController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,6 +59,13 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth:api']], function () {
     //User account 
     Route::get('profile', [UsersController::class, 'show'])->name('view.show');
     Route::put('update', [UsersController::class, 'update'])->name('users.updates');
+
+    //Events Routes
+    // Route::get('events', [EventController::class, 'index'])->name('events.index');
+    Route::post('events', [EventController::class, 'store'])->name('events.store');
+    // Route::get('events/{user}', [EventController::class, 'show'])->name('events.show');
+    // Route::put('events/{user}', [EventController::class, 'update'])->name('events.update');
+    // Route::delete('events/{user}', [EventController::class, 'destroy'])->name('events.destroy');
 
     //Vehicle  Module APIs
     Route::get('vehicles', [VehicleController::class, 'index'])->name('vehicles.index');

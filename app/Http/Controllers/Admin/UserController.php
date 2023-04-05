@@ -57,12 +57,11 @@ class UserController extends Controller {
             $users = $users->get();
             
             if($users->count() > 0){
-                $message = 'Users fetched successfully!';
+                return $this->sendResponse( $users, 'Users fetched successfully!');
             }else{
-                $message =  'Users not found!';
+                return $this->sendError('Users not found!',[], 404 );
             }
 
-            return $this->sendResponse( $users, $message );
         } catch ( Exception $e ) {
             return $this->sendError( 'Server Error', $e->getMessage(), 500 );
         }
@@ -136,8 +135,11 @@ class UserController extends Controller {
 
     public function show( $id ) {
         $user = User::with('dealership')->find($id);
-        $message =  $user ?  "User Found" : 'User Not Found!';
-        return $this->sendResponse( $user, $message );
+        if($user){
+            return $this->sendResponse( $user, 'User Found!');
+        }else{
+            return $this->sendError('User not found!',[], 404 );
+        }
     }
 
     /**

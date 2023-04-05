@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('events', function (Blueprint $table) {
             $table->id();
-            $table->string('type')->nullable();
+            $table->integer('type')->nullable();
             $table->decimal('reserve_amount', $precision = 8, $scale = 2)->default(0);
             $table->dateTime('started_at')->nullable();
             $table->dateTime('completed_at')->nullable();

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('title')->nullable();
             $table->string('model_name');
-            $table->string('model_year');
+            $table->integer('model_year');
             $table->string('make');
             $table->string('body_type');
             $table->integer('distance_covered')->comment('In KM');

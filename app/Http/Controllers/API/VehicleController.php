@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreVehicleRequest;
+use App\Models\Vehicle;
 
 class VehicleController extends Controller
 {
@@ -33,9 +35,20 @@ class VehicleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreVehicleRequest $request)
     {
-        dd($request->all());
+        $validated = $request->validated();
+        
+        //Store vehicle deatils
+        $vehicle = Vehicle::create($validated);
+        
+        //Store condition/VIN/dealership reports etc
+        if($vehicle){
+            return $this->sendResponse($vehicle, "Vehicle added successfully!");
+        }
+        else{
+            return $this->sendError( 'Error', 'Something went wrong!', 500 );
+        }
     }
 
     /**
