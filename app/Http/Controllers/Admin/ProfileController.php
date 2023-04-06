@@ -116,6 +116,8 @@ class ProfileController extends Controller
             return response()->json(['error'=>$validator->errors()], 401);                        
         }  
         $validated = $request->all();
+
+        // $validated = $request->validated();
         try{
             $extension =  $validated['image']->extension();
             $mimeType = $validated['image']->getClientMimeType();
@@ -146,7 +148,7 @@ class ProfileController extends Controller
             } else {
                 return $this->sendError('Somthing went wrong, please try again!',[], 500 );
             }
-        } catch(e) {
+        } catch(\Exception $e) {
             return $this->sendError( 'Server Error', $e->getMessage(), 500 );
         }
     }
