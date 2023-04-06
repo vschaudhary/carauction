@@ -53,6 +53,7 @@ Route::group(['middleware' => ['IsAdmin','auth:api']], function () {
     //Admin Profile Module Routes
     Route::get('profile',[ProfileController::class, 'show'])->name('admin.profile');
     Route::put('profile/update',[ProfileController::class, 'update'])->name('admin.profile.update');
+    Route::post('profile/image',[ProfileController::class, 'uploadImage'])->name('admin.profile.image');    
 });
 
 Route::group(['prefix' => 'user', 'middleware' => ['auth:api']], function () {
