@@ -25,11 +25,11 @@ class StoreEventRequest extends FormRequest
     {
         return [
             'type' => 'integer|required',
-            'reserve_amount' => 'decimal:2|required_if:type, in:auction,private_market',
-            'started_at' => 'date|nullable',
+            'reserve_amount' => 'nullable|decimal:2|required_if:type,2,3',
+            'started_at' => 'date|nullable|required_if:type,2',
             'completed_at' => 'date|nullable',
             'status' => 'integer|nullable',
-            'vehicle_id' => 'integer|required',
+            'vehicle_id' => 'integer|required|exists:vehicles,id',
             'seller_id' => 'integer|required',
             'type_id' => 'integer|nullable',
             'created_by_id' => 'integer|nullable',
@@ -44,7 +44,6 @@ class StoreEventRequest extends FormRequest
         return [
             'type.integer' => 'Type is not valid.',
             'type.required' => 'Type is required',
-            'reserve_amount.decimal' => 'Reserve amount is not valid.',
             'started_at.date' => 'Start date is not a valid date.',
             'completed_at.date' => 'Completed date is not a valid date',
             'status.integer' => 'Status is not valid.',
@@ -54,6 +53,7 @@ class StoreEventRequest extends FormRequest
             'created_by_id.integer' => 'created_by_id must be integer.',
             'vehicle_id.required' => 'Vehicle ID is required.',
             'seller_id.required' => 'Seller ID is required.',
+            'vehicle_id.exists' => 'Vehicle does not exists.'
         ];
     }
 }

@@ -15,9 +15,60 @@ class EventController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        try { 
+            $eventByType = $request->type;
+            $eventStatus = $request->status;
+            $events = Event::with('vehicle');
+
+            //2,3
+            if($eventByType == Constants::TYPE_AUCTION && $eventStatus == Constants::STATE_LIVE)
+            {
+                $events = $events->liveAuction();
+
+            }
+            //1,3
+            if($eventByType == Constants::TYPE_LIVE_APPRAISAL && $eventStatus == Constants::STATE_LIVE)
+            {
+                $events = $events->liveAppraisal();
+
+            }
+            //2,2
+            if($eventByType == Constants::TYPE_AUCTION && $eventStatus == Constants::STATE_RUN)
+            {
+                $events = $events->runList();
+
+            }
+            //2,4
+            if($eventByType == Constants::TYPE_AUCTION && $eventStatus == Constants::STATE_ENDED)
+            {
+                $events = $events->endedAuction();
+
+            }
+            //3,buyer
+            if($eventByType == Constants::TYPE_PRIVATE_MARKET && $request->category == 'buyer')
+            {
+                $events = $events->buyerPrivateMarket();
+                
+            }
+            //3,seller
+            if($eventByType == Constants::TYPE_PRIVATE_MARKET && $request->category == 'seller')
+            {
+                $events = $events->sellerPrivateMarket();
+                
+            }
+            $events = $events->get();
+            
+            if($events->count() > 0){
+                return $this->sendResponse( $events, 'Data Found!');
+            }else{
+                return $this->sendError('Data not found!',[], 404 );
+            }
+
+        } catch (\Exception $e ) {
+            return $this->sendError( 'Server Error', $e->getMessage(), 500 );
+        }
     }
 
     /**

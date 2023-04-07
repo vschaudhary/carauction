@@ -62,11 +62,8 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth:api']], function () {
     Route::put('update', [UsersController::class, 'update'])->name('users.updates');
 
     //Events Routes
-    // Route::get('events', [EventController::class, 'index'])->name('events.index');
+    Route::get('events', [EventController::class, 'index'])->name('events.index');
     Route::post('events', [EventController::class, 'store'])->name('events.store');
-    // Route::get('events/{user}', [EventController::class, 'show'])->name('events.show');
-    // Route::put('events/{user}', [EventController::class, 'update'])->name('events.update');
-    // Route::delete('events/{user}', [EventController::class, 'destroy'])->name('events.destroy');
 
     //Vehicle  Module APIs
     Route::get('vehicles', [VehicleController::class, 'index'])->name('vehicles.index');
