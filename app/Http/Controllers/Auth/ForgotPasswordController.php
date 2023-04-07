@@ -46,9 +46,9 @@ class ForgotPasswordController extends Controller
             'token'=>  $token
         ]);
         if ($password_reset) {
-            Mail::to($request->email)->send(new ResetPassword($token));
-         
-            return $this->sendResponse(  $data,"Please check your email for a 6 digit pin");
+            // Mail::to($request->email)->send(new ResetPassword($token));
+            $data = ['pin' => $token];
+            return $this->sendResponse( $data ,"Please check your email for a 6 digit pin");
         }
         
     } else {
