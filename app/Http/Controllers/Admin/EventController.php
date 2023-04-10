@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreVehicleRequest;
-use App\Models\Vehicle;
+use App\Constant\Constants;
+use App\Models\Event;
 
-class VehicleController extends Controller
+class EventController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -35,20 +35,9 @@ class VehicleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreVehicleRequest $request)
+    public function store(Request $request)
     {
-        $validated = $request->validated();
-        
-        //Store vehicle deatils
-        $vehicle = Vehicle::create($validated);
-        
-        //Store condition/VIN/dealership reports etc
-        if($vehicle){
-            return $this->sendResponse($vehicle, "Vehicle added successfully!");
-        }
-        else{
-            return $this->sendError( 'Error', 'Something went wrong!', 500 );
-        }
+        //
     }
 
     /**
@@ -82,7 +71,30 @@ class VehicleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //        
+        try{
+            $data = $request->all();
+            $validator = Validator::make($request->all(), [
+                'status' => ['required|integer'],
+            ]);
+
+            if ($validator->fails()) {
+                return $this->sendError('Validation Error.', $validator->errors(), 403);       
+            }
+
+            $event  = Event::find($id);
+            if($event){
+                if($event->update($data)){
+                    return $this->sendResponse($user, "Status updated successfully!");
+                }
+                else{
+                    return $this->sendError( 'Error', 'Something went wrong!', 500 );
+                }
+            } else {
+                return $this->sendError( 'Error', 'User not found!', 400 );
+            }
+        }  catch (\Exception $e ) {
+            return $this->sendError( 'Server Error', $e->getMessage(), 500 );
+        }    
     }
 
     /**

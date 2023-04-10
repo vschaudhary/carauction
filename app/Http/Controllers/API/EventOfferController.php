@@ -4,10 +4,12 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreVehicleRequest;
-use App\Models\Vehicle;
+use Illuminate\Support\Facades\Auth;
+use App\Constant\Constants;
+use Validator;
+use App\Models\EventOffer;
 
-class VehicleController extends Controller
+class EventOfferController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -35,19 +37,34 @@ class VehicleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreVehicleRequest $request)
+    public function store(Request $request)
     {
-        $validated = $request->validated();
-        
-        //Store vehicle deatils
-        $vehicle = Vehicle::create($validated);
-        
-        //Store condition/VIN/dealership reports etc
-        if($vehicle){
-            return $this->sendResponse($vehicle, "Vehicle added successfully!");
-        }
-        else{
-            return $this->sendError( 'Error', 'Something went wrong!', 500 );
+        try{
+            $validated = Validator::make($request->all(), [
+                'event_id' => 'required|integer|exists:events,id',
+                'buyer_offered_amount' => 'required|integer'
+            ]);        
+            if($validated->fails()){
+                return $this->sendError('Validation Errors', $validated->errors(), 403);
+            }
+            $data = [
+                'buyer_id' => Auth::id(),
+                'buyer_offered_amount' => $request->get('buyer_offered_amount'),
+                'seller_offered_amount' => null,
+                'status' => Constants::STATE_BID,
+                'event_id' => $request->get('event_id'),
+                'type_id' => Constants::STATE_ACTIVE,
+                'created_by_id' =>Auth::id()
+            ];
+            $eventOffer = EventOffer::updateOrCreate(['buyer_id' => Auth::id()], $data);
+
+            if($eventOffer){
+                return $this->sendResponse( $eventOffer, 'You made an offer successfully!');
+            }else{
+                return $this->sendError('Somthing went wrong, try again.',[], 500 );
+            }
+        } catch(\Exception $e) {
+            return $this->sendError( 'Server Error', $e->getMessage(), 500 );
         }
     }
 
@@ -82,7 +99,7 @@ class VehicleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //        
+        //
     }
 
     /**

@@ -12,6 +12,8 @@ use App\Http\Controllers\API\UserController as UsersController;
 use App\Http\Controllers\Admin\DocumentController;
 use App\Http\Controllers\API\VehicleController;
 use App\Http\Controllers\API\EventController;
+use App\Http\Controllers\Admin\EventController as AdminEventController; 
+use App\Http\Controllers\API\EventOfferController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +56,9 @@ Route::group(['middleware' => ['IsAdmin','auth:api']], function () {
     Route::get('profile',[ProfileController::class, 'show'])->name('admin.profile');
     Route::put('profile/update',[ProfileController::class, 'update'])->name('admin.profile.update');
     Route::post('profile/image',[ProfileController::class, 'uploadImage'])->name('admin.profile.image');    
+
+    //Event Module Routes
+    Route::put('events/{id}', [AdminEventController::class, 'update'])->name('event.update');
 });
 
 Route::group(['prefix' => 'user', 'middleware' => ['auth:api']], function () {
@@ -64,6 +69,9 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth:api']], function () {
     //Events Routes
     Route::get('events', [EventController::class, 'index'])->name('events.index');
     Route::post('events', [EventController::class, 'store'])->name('events.store');
+
+    //Event Offers Routes
+    Route::post('events/offer', [EventOfferController::class, 'store'])->name('event.offer');
 
     //Vehicle  Module APIs
     Route::get('vehicles', [VehicleController::class, 'index'])->name('vehicles.index');

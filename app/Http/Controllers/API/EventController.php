@@ -129,7 +129,30 @@ class EventController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try{
+            $data = $request->all();
+            $validator = Validator::make($request->all(), [
+                'status' => ['required|integer'],
+            ]);
+
+            if ($validator->fails()) {
+                return $this->sendError('Validation Error.', $validator->errors(), 403);       
+            }
+
+            $event  = Event::find($id);
+            if($event){
+                if($event->update($data)){
+                    return $this->sendResponse($user, "Status updated successfully!");
+                }
+                else{
+                    return $this->sendError( 'Error', 'Something went wrong!', 500 );
+                }
+            } else {
+                return $this->sendError( 'Error', 'User not found!', 400 );
+            }
+        }  catch (\Exception $e ) {
+            return $this->sendError( 'Server Error', $e->getMessage(), 500 );
+        }     
     }
 
     /**
